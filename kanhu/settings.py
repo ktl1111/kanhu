@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,9 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'z)*_2c-lqpv_d&p*lpz!^__=a$c%ymnl^8oxhcz(y9vq%e2dc!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'still-refuge-67067.herokuapp.com']
 
 
 # Application definition
@@ -37,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -48,7 +50,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 )
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'kanhu.urls'
 
@@ -74,6 +79,9 @@ WSGI_APPLICATION = 'kanhu.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -85,9 +93,9 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hant'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Taipei'
 
 USE_I18N = True
 
@@ -100,3 +108,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
